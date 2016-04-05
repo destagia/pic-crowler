@@ -66,9 +66,14 @@ Promise.all(promises.reduce(function (next, acc) { return acc.concat(next); }, [
           json: false,
           encoding: 'binary'
         }, function (error, response, data) {
-          if (error) { errorDot(); reject(); }
-          successDot();
-          result({info: photo, data: data});
+          if (error) {
+            errorDot();
+            result({stat: 'failed', error: error});
+            return;
+          } else {
+            successDot();
+            result({stat: 'ok', info: photo, data: data});
+          }
         });
       });
     }));
@@ -77,11 +82,15 @@ Promise.all(promises.reduce(function (next, acc) { return acc.concat(next); }, [
     process.stdout.write('\nWriting image onto local\n');
     return Promise.all(photos.map(function (photo) {
       return new Promise(function (result, reject) {
-        fs.writeFile("dist/" + photo.info.dir + "/" + photo.info.dir + "_" + photo.info.photo_id + ".jpg", photo.data, 'binary', function (err) {
-          if (err) { errorDot(); return; }
-          successDot();
+        if (photo.stat == 'ok') {
+          fs.writeFile("dist/" + photo.info.dir + "/" + photo.info.dir + "_" + photo.info.photo_id + ".jpg", photo.data, 'binary', function (err) {
+            if (err) { errorDot(); return; }
+            successDot();
+            result();
+          });
+        } else {
           result();
-        });
+        }
       });
     }));
   })
