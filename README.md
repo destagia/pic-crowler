@@ -9,6 +9,8 @@ Nodeで動くので、Node.jsをインストールする必要があります。
 ```sh
 $ brew install node
 $ npm -v # v5.4.0
+$ cd /path/to/pic-crowler
+$ npm install # install dependencies
 ```
 
 ## Usage
