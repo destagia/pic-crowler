@@ -19,7 +19,8 @@ $ npm install # install dependencies
 [
     {
         "keywords": ["犬 動物", "dog animal"],
-        "class": "dog"
+        "class": "dog",
+        "count": 300
     },
     {
         "keywords": ["猫", "cat"],

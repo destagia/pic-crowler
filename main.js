@@ -15,18 +15,34 @@ function errorDot() {
   process.stdout.write('\033[31m.\033[0m');
 }
 
+config = config.reduce(function (acc, next) {
+  if (next.count > 1000) {
+    var prev = 0;
+    for (var count = next.count; count > 0; count -= 1000) {
+      var clone = JSON.parse(JSON.stringify(next));
+      clone.offset = prev;
+      clone.count = Math.min(1000, count);
+      acc.push(clone);
+      prev += count;
+    }
+  } else {
+    acc.push(next);
+  }
+  return acc;
+}, []);
+
 // send request API according to config.json.
 // And, gather them out into a Array
 var count = 0;
 var promises = config.map(function (element) {
   var dir = 'dist/' + element.class;
   if (!fs.existsSync(dir)) { fs.mkdirSync(dir); }
-  return element.keywords.map(function (keyword) {
     return new Promise(function (result, reject) {
+      var keyword = element.keywords.join(' ');
       setTimeout(function () {
         request({
           url: 'https://api.photozou.jp/rest/search_public.json',
-          qs: { keyword: keyword },
+          qs: { keyword: keyword, limit: element.count || 100, offset: element.offset || 0 },
           method: 'GET',
           json: true
         }, function (error, response, body) {
@@ -44,11 +60,10 @@ var promises = config.map(function (element) {
       }, count * 2000);
       count += 1;
     });
-  });
 });
 
 console.log('Requesting API');
-Promise.all(promises.reduce(function (next, acc) { return acc.concat(next); }, []))
+Promise.all(promises)
   .then(function (requests) {
     process.stdout.write('\nProcessing...');
     console.log()
