@@ -1,0 +1,14 @@
+[
+    {
+        "keywords": ["犬", "dog", "いぬ"],
+        "class": "dog"
+    },
+    {
+        "keywords": ["猫", "cat"],
+        "class": "cat"
+    },
+    {
+        "keywords": ["ライオン"],
+        "class": "lion"
+    }
+]
