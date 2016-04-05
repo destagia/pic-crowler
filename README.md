@@ -2,6 +2,15 @@
 
 フォト蔵かなんかのやつで画像拾ってきます
 
+## Install Node.js
+
+Nodeで動くので、Node.jsをインストールする必要があります。
+
+```sh
+$ brew install node
+$ npm -v # v5.4.0
+```
+
 ## Usage
 
 ```json
